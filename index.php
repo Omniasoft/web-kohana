@@ -6,9 +6,11 @@ $system = 'kohana';
 $vendor = 'vendor';
 
 // Enable error reporting
+ini_set('display_errors', true);
 error_reporting(E_ALL | E_STRICT);
 
 // Set the full path to the docroot and some other defines
+define('EXT', '.php');
 define('DOCROOT', realpath(dirname(__FILE__)).DIRECTORY_SEPARATOR);
 
 // Make the directories relative to the docroot, for symlink'd index.php
@@ -32,7 +34,7 @@ unset($application, $modules, $system, $vendor);
 
 // Define the memory usage and start time at the start of the application, used for profiling.
 if ( ! defined('KOHANA_START_TIME'))
-	define('KOHANA_START_TIME', microtime(TRUE));
+	define('KOHANA_START_TIME', microtime(true));
 if ( ! defined('KOHANA_START_MEMORY'))
 	define('KOHANA_START_MEMORY', memory_get_usage());
 
@@ -44,7 +46,7 @@ else
 	require(SYSPATH.'classes/Kohana'.EXT);
 
 // Register autoloads
-spl_autoload_register(array('Kohana', 'auto_load'));
+spl_autoload_register(['Kohana', 'auto_load']);
 ini_set('unserialize_callback_func', 'spl_autoload_call');
 
 // Register composer autoloader if it exists
@@ -63,15 +65,15 @@ require(APPPATH.'bootstrap'.EXT);
 if (PHP_SAPI == 'cli') // Try and load minion
 {
 	class_exists('Minion_Task') OR die('Please enable the Minion module for CLI support.');
-	set_exception_handler(array('Minion_Exception', 'handler'));
+	set_exception_handler(['Minion_Exception', 'handler']);
 	Minion_Task::factory(Minion_CLI::options())->execute();
 }
 else
 {
 	// Execute the main request. A source of the URI can be passed, eg: $_SERVER['PATH_INFO'].
 	// If no source is specified, the URI will be automatically detected.
-	echo Request::factory(TRUE, array(), FALSE)
+	echo Request::factory(true, [], false)
 		->execute()
-		->send_headers(TRUE)
+		->send_headers(true)
 		->body();
 }
