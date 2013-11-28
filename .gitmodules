@@ -1,3 +1,6 @@
 [submodule "kohana"]
 	path = kohana
 	url = https://github.com/kohana/core.git
+[submodule "modules/sugar"]
+	path = modules/sugar
+	url = git@github.com:Omniasoft/kohana-sugar.git
